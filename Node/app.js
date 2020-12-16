@@ -1,48 +1,32 @@
-//Testing some features
+//Modular Coding
+const tutorial = require('./tutorial');
+console.log(tutorial.sum(1,1));
+console.log(tutorial.PI);
+console.log(new tutorial.SomeMathObject());
 
-//Displaying path
-const path = require('path');
-var pathObj = path.parse(__filename);
-console.log(pathObj);
-
-//OS details
-const os = require('os');
-var totalMemory = os.totalmem();
-var freeMemory = os.freemem();
-console.log(`${totalMemory} : Total Memory`);
-console.log(`${freeMemory} : Free Memory`)
-
-//File System
-const fs = require('fs');
-const files = fs.readdirSync('./');
-fs.readdir('./',function(err,files){
-    if(err) console.log('Error : ',err);
-    else console.log('Result: ',files);
-});
-
-//Events
+//Event Emitter
 const EventEmitter = require('events');
-const Logger = require('./logger');
-const logger  = new Logger();
-logger.on('messageLogged',(arg)=>{
-    console.log('Listener called', arg);
-});
-
-logger.log('message');
-
-
-//HTTP
-const http = require('http');
-const server  = http.createServer(function(req,res){
-    if(req.url==='/'){
-        res.write('Hello World');
-        res.end();
+const eventEmitter = new EventEmitter();
+eventEmitter.on('tutorial',(num1,num2)=>{
+    console.log(num1+num2);
+}) 
+eventEmitter.emit('tutorial',1,2);
+class Person extends EventEmitter{
+    constructor(name)
+    {
+        super();
+        this._name = name;
     }
-    if(req.url==='/array'){
-        res.write(JSON.stringify([1,2,3]));
-        res.end();
-    }
-});
 
-server.listen(3000);
-console.log('Listening on port 3000');
+    get name(){
+        return this._name;
+    }
+}
+let sujoy = new Person('Sujoy');
+sujoy.on('name',()=>{
+    console.log('my name is '+sujoy.name);
+})
+sujoy.emit('name');
+
+
+
